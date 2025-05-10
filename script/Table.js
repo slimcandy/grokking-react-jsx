@@ -22,17 +22,48 @@ function Table({ defaultCandies = [] }) {
               <th scope="col">Цена</th>
               <th scope="col">
                 Действия
-                <button id="disable-all">Отключить все</button>
+                <button
+                  id="disable-all"
+                  onClick={function disableAll() {
+                    var nextCandies = candies.map((candy) => {
+                      return {
+                        ...candy,
+                        isDisabled: true,
+                      };
+                    });
+
+                    setCandies(nextCandies);
+                  }}
+                >
+                  Отключить все
+                </button>
               </th>
             </tr>
           </thead>
           <tbody>
             {candies.map((candy) => (
-              <tr>
-                <th scope="row">{candy.name}</th>
-                <td class="price">{candy.price}</td>
+              <tr key={candy.name}>
+                <th scope="row">
+                  {candy.isDisabled ? <s>{candy.name}</s> : candy.name}
+                </th>
+                <td className="price">{candy.price}</td>
                 <td>
-                  <button>Отключить позицию</button>
+                  <button
+                    disabled={candy.isDisabled}
+                    onClick={function disableCandy() {
+                      var nextCandies = candies.map((c) => {
+                        if (c.name === candy.name) {
+                          c.isDisabled = !c.isDisabled;
+                        }
+
+                        return c;
+                      });
+
+                      setCandies(nextCandies);
+                    }}
+                  >
+                    Отключить позицию
+                  </button>
                 </td>
               </tr>
             ))}
