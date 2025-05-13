@@ -3,6 +3,17 @@ const { useState } = React;
 function Table({ defaultCandies = [] }) {
   const [candies, setCandies] = useState(defaultCandies);
 
+  function disableAll() {
+    var nextCandies = candies.map((candy) => {
+      return {
+        ...candy,
+        isDisabled: true,
+      };
+    });
+
+    setCandies(nextCandies);
+  }
+
   return (
     <>
       <header>
@@ -22,19 +33,7 @@ function Table({ defaultCandies = [] }) {
               <th scope="col">Цена</th>
               <th scope="col">
                 Действия
-                <button
-                  id="disable-all"
-                  onClick={function disableAll() {
-                    var nextCandies = candies.map((candy) => {
-                      return {
-                        ...candy,
-                        isDisabled: true,
-                      };
-                    });
-
-                    setCandies(nextCandies);
-                  }}
-                >
+                <button id="disable-all" onClick={disableAll}>
                   Отключить все
                 </button>
               </th>
@@ -42,30 +41,7 @@ function Table({ defaultCandies = [] }) {
           </thead>
           <tbody>
             {candies.map((candy) => (
-              <tr key={candy.name}>
-                <th scope="row">
-                  {candy.isDisabled ? <s>{candy.name}</s> : candy.name}
-                </th>
-                <td className="price">{candy.price}</td>
-                <td>
-                  <button
-                    disabled={candy.isDisabled}
-                    onClick={function disableCandy() {
-                      var nextCandies = candies.map((c) => {
-                        if (c.name === candy.name) {
-                          c.isDisabled = !c.isDisabled;
-                        }
-
-                        return c;
-                      });
-
-                      setCandies(nextCandies);
-                    }}
-                  >
-                    Отключить позицию
-                  </button>
-                </td>
-              </tr>
+              <Row key={candy.name} candy={candy} setCandies={setCandies} />
             ))}
           </tbody>
         </table>
